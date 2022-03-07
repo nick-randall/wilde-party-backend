@@ -30,7 +30,7 @@ public class AnonymerUser implements User {
 	 * 
 	 */
 	
-	private String ipAdresse;
+	private final String ipAdresse;
 	
 
 	
@@ -39,10 +39,14 @@ public class AnonymerUser implements User {
 		this.name = name;
 		this.ipAdresse = ipAdresse;
 	}
-
-	public void setIpAdresse(String ipAdresse) {
+	
+	public AnonymerUser(long userId, String name, String ipAdresse) {
+		super();
+		this.userId = userId;
+		this.name = name;
 		this.ipAdresse = ipAdresse;
 	}
+
 
 	@Override
 	public long getUserId() {

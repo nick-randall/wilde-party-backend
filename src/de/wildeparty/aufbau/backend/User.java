@@ -29,6 +29,6 @@ public interface User {
 		 */
 		
 		public String getIpAdresse();
-		
+				
 		
 }

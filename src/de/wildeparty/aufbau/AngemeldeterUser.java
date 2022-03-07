@@ -26,12 +26,16 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 		this.emailAdresse = emailAdresse;
 	}
 	
+	/**
+	 * erstellt ein neuer AngemeldeterUser ohne zuerst ein anonymerUser erstellen zu müssen
+	 * @param name
+	 * @param ipAdresse
+	 * @param emailAdresse
+	 */
 	public AngemeldeterUser(String name, String ipAdresse, String emailAdresse) {
 		super(new AnonymerUser(name, ipAdresse));
 		this.emailAdresse = emailAdresse;
 	}
-	
-	
 
 	@Override
 	public long getUserId() {

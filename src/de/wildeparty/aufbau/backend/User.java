@@ -1,4 +1,4 @@
-package de.wildeparty.aufbau;
+package de.wildeparty.aufbau.backend;
 
 public interface User {
 

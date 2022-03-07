@@ -1,5 +1,7 @@
 package de.wildeparty.aufbau;
 
+import de.wildeparty.aufbau.backend.User;
+
 public abstract class AnonymerUserDecorator implements User {
 
 	protected User user;
@@ -27,6 +29,9 @@ public abstract class AnonymerUserDecorator implements User {
 	 * @return die userId dieses Users.
 	 */
 	
+	public AnonymerUserDecorator(User user) {
+		this.user = user;
+	}
 	
 	
 	public abstract long getUserId();
@@ -43,6 +48,13 @@ public abstract class AnonymerUserDecorator implements User {
 	 */
 	
 	public abstract void setName(String name);
+	
+	/**
+	 * 
+	 * @param anzahlSpieler
+	 */
+	
+	public abstract void spielStarten(int anzahlSpieler);
 	
 	/**
 	 * 

@@ -1,9 +1,10 @@
-package de.wildeparty.snapshot;
+package de.wildeparty.aufbau;
 
 public enum SpielStatus {
 
 	WARTEN,
 	GESTARTET,
-	BEENDET
+	BEENDET;
+	
 	
 }

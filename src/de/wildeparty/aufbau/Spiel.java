@@ -1,9 +1,9 @@
-package de.wildeparty.snapshot;
+package de.wildeparty.aufbau;
 
 import java.util.Arrays;
-import java.util.List;
 
-import de.wildeparty.aufbau.User;
+import de.wildeparty.aufbau.backend.User;
+import de.wildeparty.snapshot.Snapshot;
 
 /**
  * Das Spielobjekt. Die Darstellung eines Spiels in Java. Enthält das
@@ -45,19 +45,20 @@ public class Spiel {
 	 * zugewiesen wurden.
 	 */
 
-	private final Zone[] nichtSpielerZonen;
-
-	public Spiel(User[] spieler, SpielStatus status, Zone[] nichtSpielerZonen) {
-		this.status = status;
-		this.spieler = spieler;
-		this.nichtSpielerZonen = nichtSpielerZonen;
-	}
+	private final Snapshot snapshot = null;
 
 	@Override
 	public String toString() {
-		return "Spiel [id=" + id + ", spieler=" + Arrays.toString(spieler) + ", status=" + status
-				+ ", nichtSpielerZonen=" + Arrays.toString(nichtSpielerZonen) + "]";
+		return "Spiel [id=" + id + ", spieler=" + Arrays.toString(spieler) + ", status=" + status + ", snapshot="
+				+ snapshot + "]";
 	}
+
+
+	public Spiel(User[] spieler, SpielStatus status, Snapshot snapshot) {
+		this.status = status;
+		this.spieler = spieler;
+	}
+
 
 	public long getId() {
 		return id;
@@ -83,8 +84,5 @@ public class Spiel {
 		this.spieler = spieler;
 	}
 
-	public Zone[] getNichtSpielerZonen() {
-		return nichtSpielerZonen;
-	}
 
 }

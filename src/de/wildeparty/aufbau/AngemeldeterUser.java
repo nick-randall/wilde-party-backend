@@ -2,49 +2,71 @@ package de.wildeparty.aufbau;
 
 import java.util.regex.Pattern;
 
-public abstract class AngemeldeterUser extends AnonymerUserDecorator {
+import de.wildeparty.aufbau.backend.User;
 
-protected User user;
-	
+public class AngemeldeterUser extends AnonymerUserDecorator {
+
+	private User user;
+
 	private String emailAdresse;
+	
+	/**
+	 * erstellt ein AngemeldeterUser aus einem AnonymerUser
+	 * @param anonymerUser
+	 * @param emailAdresse
+	 */
 
-	public AngemeldeterUser(User user, String emailAdresse) {
+	public AngemeldeterUser(User anonymerUser, String emailAdresse) {
+		super(anonymerUser);
 		boolean isEmailAdresse = Pattern.matches("^\s+@\s+$", emailAdresse);
-		if(!isEmailAdresse) {
+		if (!isEmailAdresse) {
 			throw new IllegalArgumentException(emailAdresse + " ist keine richtige Email-Adresse");
 		}
-		this.user = user;
+		this.user = anonymerUser;
+		this.emailAdresse = emailAdresse;
+	}
+	
+	public AngemeldeterUser(String name, String ipAdresse, String emailAdresse) {
+		super(new AnonymerUser(name, ipAdresse));
 		this.emailAdresse = emailAdresse;
 	}
 	
 	
-	
+
 	@Override
 	public long getUserId() {
 		return userId;
 	}
-	
+
 	public String getEmailAdresse() {
 		return emailAdresse;
 	}
 
 	public void setEmailAdresse(String emailAdresse) {
 		boolean isEmailAdresse = Pattern.matches("^\s+@\s+$", emailAdresse);
-		if(!isEmailAdresse) {
+		if (!isEmailAdresse) {
 			throw new IllegalArgumentException(emailAdresse + " ist keine richtige Email-Adresse");
 		}
 		this.emailAdresse = emailAdresse;
 	}
+	
+
+	@Override
+	public void spielStarten(int anzahlSpieler) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	@Override
 	public String getName() {
-		return name;
+		return user.getName();
 	}
 
 	@Override
 	public void setName(String name) {
 		this.name = name;
-		
+
 	}
 
 	@Override

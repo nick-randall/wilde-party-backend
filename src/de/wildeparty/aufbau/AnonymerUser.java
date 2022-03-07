@@ -1,5 +1,7 @@
 package de.wildeparty.aufbau;
 
+import de.wildeparty.aufbau.backend.User;
+
 /**
  * Ein AnonymerUser hat keine email-Adresse hinterlegt und hat deshalb
  * keine weiterbestehende Identität

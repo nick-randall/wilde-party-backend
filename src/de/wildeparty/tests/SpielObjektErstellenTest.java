@@ -1,9 +1,9 @@
 package de.wildeparty.tests;
 
 import de.wildeparty.aufbau.AnonymerUser;
-import de.wildeparty.aufbau.User;
-import de.wildeparty.snapshot.Spiel;
-import de.wildeparty.snapshot.SpielStatus;
+import de.wildeparty.aufbau.Spiel;
+import de.wildeparty.aufbau.SpielStatus;
+import de.wildeparty.aufbau.backend.User;
 
 public class SpielObjektErstellenTest {
 
@@ -13,6 +13,9 @@ public class SpielObjektErstellenTest {
 		User[] users = { userEins };
 
 		Spiel game = new Spiel(users, SpielStatus.WARTEN, null);
+		
+		
+		
 		System.out.println(game);
 
 	}

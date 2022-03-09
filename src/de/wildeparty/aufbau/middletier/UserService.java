@@ -2,6 +2,7 @@ package de.wildeparty.aufbau.middletier;
 
 import java.util.List;
 
+import de.wildeparty.aufbau.AngemeldeterUser;
 import de.wildeparty.aufbau.AnonymerUser;
 import de.wildeparty.aufbau.backend.User;
 import de.wildeparty.aufbau.backend.UserDao;
@@ -32,12 +33,18 @@ public class UserService {
 	 * 
 	 * @param benutzer
 	 * Legt einen neuen Benutzer in der Datenquelle an.
+	 * 
+	 * @return den neu angelegten Benutzer
 	 */
 	
-	public void neuenAnonymenUserAnlegen(AnonymerUser benutzer) {
+	public void anlegenNeuenAnonymenUser(AnonymerUser benutzer) {
 		datenquelle.addUser(benutzer);
-		
 	}
+	
+	public void loeschenUser(User benutzer) {
+		datenquelle.deleteUser(benutzer);
+	}
+	
 
 	/**
 	 * 
@@ -71,9 +78,19 @@ public class UserService {
 	public void updateUser(User benutzer) {
 		datenquelle.updateUser(benutzer);
 	}
+	/**
+	 * 
+	 * @return den neuesten User. 
+	 */
 	
-	public void machenAngemeldetenAusAnonymenUser(AnonymerUser benutzer) {
-		
+	public User holenNeuenUser() {
+		User neuerUser =  alleUsers.get(alleUsers.size()-1);
+		return neuerUser; 
+	}
+	
+	public void machenAngemeldetenAusAnonymenUser(AnonymerUser benutzer, String emailAdresse, String passwort) {
+		AngemeldeterUser au = new AngemeldeterUser(benutzer, emailAdresse, passwort);
+		datenquelle.updateUser(au);
 	}
 
 }

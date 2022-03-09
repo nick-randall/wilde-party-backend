@@ -31,16 +31,15 @@ public class UserDAOImplMitDB implements UserDao {
 				ResultSet ergebnis = verpackung.executeQuery(sql)) {
 
 			while (ergebnis.next()) {
-				User benutzer;
 				long userId = ergebnis.getLong(1);
 				String name = ergebnis.getString(2);
 				String ipAdresse = ergebnis.getString(3);
-				benutzer = new AnonymerUser(userId, name, ipAdresse);
+				User benutzer = new AnonymerUser(userId, name, ipAdresse);
 				boolean isAngemeldet = ergebnis.getBoolean(4);
 				if (isAngemeldet) {
 					String emailAdresse = ergebnis.getString(5);
 					String passwort = ergebnis.getString(6);
-					benutzer = new AngemeldeterUser(benutzer, emailAdresse, passwort);
+					benutzer = new AngemeldeterUser((AnonymerUser) benutzer, emailAdresse, passwort);
 				}
 				alleUsersTemp.add(benutzer);
 			}
@@ -83,21 +82,22 @@ public class UserDAOImplMitDB implements UserDao {
 	public void addUser(User benutzer) {
 		// Die Datenbank benutzt Auto-Increment, also setzten wir den ersten Wert auf
 		// NULL
-		String sql = "INSERT users VALUE (NULL, ?, ?, ?, ?, ?)";
+		String sql = "INSERT users VALUE (NULL, ?, ?, ?, NULL, NULL)";
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
 				ZugriffAufDB.PASSWORT); PreparedStatement verpackung = verbindung.prepareStatement(sql);) {
 			verpackung.setString(1, benutzer.getName());
 			verpackung.setString(2, benutzer.getIpAdresse());
-			verpackung.setBoolean(3, benutzer.isAngemeldet());
-			String emailAdresse = null;
-			String passwort = null;
-			if (benutzer.isAngemeldet()) {
-				AngemeldeterUser au = (AngemeldeterUser) benutzer;
-				emailAdresse = au.getEmailAdresse();
-				passwort = au.getPasswort();
-			}
-			verpackung.setString(4, emailAdresse);
-			verpackung.setString(5, passwort);
+			verpackung.setBoolean(3, false);
+//			verpackung.setBoolean(3, benutzer.isAngemeldet());
+//			String emailAdresse = null;
+//			String passwort = null;
+//			if (benutzer.isAngemeldet()) {
+//				AngemeldeterUser angemeldeterUser = (AngemeldeterUser) benutzer;
+//				emailAdresse = angemeldeterUser.getEmailAdresse();
+//				passwort = angemeldeterUser.getPasswort();
+//			}
+//			verpackung.setString(4, emailAdresse);
+//			verpackung.setString(5, passwort);
 			verpackung.execute();
 
 		} catch (SQLException ausnahme) {
@@ -135,11 +135,12 @@ public class UserDAOImplMitDB implements UserDao {
 
 	}
 	/**
-	 * Hier einen Benutzer übergeben mit 
+	 * Hier einen Benutzer übergeben mit neuen Parametern...aber die gleiche User-Id
 	 */
 
 	@Override
 	public void updateUser(User benutzer) {
+		System.out.println("Updating user " + benutzer + " isAngemeldet: " + benutzer.isAngemeldet());
 		long id = benutzer.getUserId();
 		String sql = "UPDATE users SET name = ?, ip_address = ?, is_anonym = ?, email_address = ?, password = ? "
 				+ "WHERE user_id = " + id;
@@ -157,6 +158,7 @@ public class UserDAOImplMitDB implements UserDao {
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
+		
 		alleUsers.remove(benutzer);
 		alleUsers.add(benutzer);
 	}
@@ -183,7 +185,7 @@ public class UserDAOImplMitDB implements UserDao {
 				if (!isAnonym) {
 					String emailAdresse = ergebnis.getString(5);
 					String passwort = ergebnis.getString(6);
-					benutzer = new AngemeldeterUser(benutzer, emailAdresse, passwort);
+					benutzer = new AngemeldeterUser((AnonymerUser) benutzer, emailAdresse, passwort);
 				}
 
 			}

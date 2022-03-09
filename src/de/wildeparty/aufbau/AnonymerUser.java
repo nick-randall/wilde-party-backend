@@ -100,7 +100,7 @@ public class AnonymerUser implements User {
 		if (getClass() != obj.getClass())
 			return false;
 		AnonymerUser other = (AnonymerUser) obj;
-		return Objects.equals(ipAdresse, other.ipAdresse) && userId == other.userId;
+		return  userId == other.userId;
 	}
 
 	

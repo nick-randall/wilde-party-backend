@@ -1,5 +1,6 @@
 package de.wildeparty.aufbau;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.wildeparty.aufbau.backend.User;
@@ -13,42 +14,48 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	private String passwort;
 	
 	/**
+	 * Decorator Pattern
 	 * erstellt ein AngemeldeterUser aus einem AnonymerUser
 	 * @param anonymerUser
 	 * @param emailAdresse
+	 * @param passwort
 	 */
 
-	public AngemeldeterUser(User anonymerUser, String emailAdresse, String passwort) {
-		super(anonymerUser);
-		boolean isValidEmailAdresse = Pattern.matches("^\s+@\s+$", emailAdresse);
+	public AngemeldeterUser(User user, String emailAdresse, String passwort) {
+		super(user);
+	    Pattern VALID_EMAIL = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+		Pattern VALID_PASSWORT = Pattern.compile("{8,20}", Pattern.CASE_INSENSITIVE);
+
+		Matcher matcher = VALID_EMAIL.matcher(emailAdresse);
+		boolean isValidEmailAdresse = matcher.find();
 		if (!isValidEmailAdresse) {
 			throw new IllegalArgumentException(emailAdresse + " ist keine richtige Email-Adresse");
 		}
-		boolean isValidPasswort = Pattern.matches("{8,20}", passwort);
+		
+		Matcher matcherZwei = VALID_PASSWORT.matcher(passwort);
+		boolean isValidPasswort = matcherZwei.find();
+		
 		if (!isValidPasswort) {
 			throw new IllegalArgumentException(passwort + " ist kein richtiges Passwort");
 		}
-		this.user = anonymerUser;
+		this.user = user;
 		this.emailAdresse = emailAdresse;
-		this.setPasswort(passwort);
+		this.passwort = passwort;
 	}
 	
+
 	/**
 	 * erstellt ein neuer AngemeldeterUser ohne zuerst ein anonymerUser erstellen zu müssen
 	 * @param name
 	 * @param ipAdresse
 	 * @param emailAdresse
 	 */
-	public AngemeldeterUser(String name, String ipAdresse, String emailAdresse, String passwort) {
-		super(new AnonymerUser(name, ipAdresse));
+	public AngemeldeterUser(long userId, String name, String ipAdresse, String emailAdresse, String passwort) {
+		super(new AnonymerUser(userId, name, ipAdresse));
 		this.emailAdresse = emailAdresse;
 		this.setPasswort(passwort);
 	}
 
-	@Override
-	public long getUserId() {
-		return userId;
-	}
 
 	public String getEmailAdresse() {
 		return emailAdresse;
@@ -76,14 +83,8 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	}
 
 	@Override
-	public void setName(String name) {
-		this.name = name;
-
-	}
-
-	@Override
 	public String getIpAdresse() {
-		return ipAdresse;
+		return user.getIpAdresse();
 	}
 
 	@Override
@@ -99,9 +100,19 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 		this.passwort = passwort;
 	}
 
+	
+
+	@Override
+	public String toString() {
+		return "AngemeldeterUser [emailAdresse=" + emailAdresse + ", passwort=" + passwort + ", userId=" + getUserId()
+				+ ", name=" + getName() + ", ipAdresse=" + getIpAdresse() + "]";
+	}
+
+
 	@Override
 	public void setUserId(long id) {
-		this.userId = id;
+		// TODO Auto-generated method stub
+		
 	}
 
 

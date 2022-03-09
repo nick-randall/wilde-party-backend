@@ -10,20 +10,27 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 
 	private String emailAdresse;
 	
+	private String passwort;
+	
 	/**
 	 * erstellt ein AngemeldeterUser aus einem AnonymerUser
 	 * @param anonymerUser
 	 * @param emailAdresse
 	 */
 
-	public AngemeldeterUser(User anonymerUser, String emailAdresse) {
+	public AngemeldeterUser(User anonymerUser, String emailAdresse, String passwort) {
 		super(anonymerUser);
-		boolean isEmailAdresse = Pattern.matches("^\s+@\s+$", emailAdresse);
-		if (!isEmailAdresse) {
+		boolean isValidEmailAdresse = Pattern.matches("^\s+@\s+$", emailAdresse);
+		if (!isValidEmailAdresse) {
 			throw new IllegalArgumentException(emailAdresse + " ist keine richtige Email-Adresse");
+		}
+		boolean isValidPasswort = Pattern.matches("{8,20}", passwort);
+		if (!isValidPasswort) {
+			throw new IllegalArgumentException(passwort + " ist kein richtiges Passwort");
 		}
 		this.user = anonymerUser;
 		this.emailAdresse = emailAdresse;
+		this.setPasswort(passwort);
 	}
 	
 	/**
@@ -32,9 +39,10 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	 * @param ipAdresse
 	 * @param emailAdresse
 	 */
-	public AngemeldeterUser(String name, String ipAdresse, String emailAdresse) {
+	public AngemeldeterUser(String name, String ipAdresse, String emailAdresse, String passwort) {
 		super(new AnonymerUser(name, ipAdresse));
 		this.emailAdresse = emailAdresse;
+		this.setPasswort(passwort);
 	}
 
 	@Override
@@ -76,6 +84,19 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	@Override
 	public String getIpAdresse() {
 		return ipAdresse;
+	}
+
+	@Override
+	public boolean isAngemeldet() {
+		return true;
+	}
+
+	public String getPasswort() {
+		return passwort;
+	}
+
+	public void setPasswort(String passwort) {
+		this.passwort = passwort;
 	}
 
 

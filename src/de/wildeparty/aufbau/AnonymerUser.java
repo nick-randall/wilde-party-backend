@@ -74,6 +74,11 @@ public class AnonymerUser implements User {
 		return "AnonymerUser [userId=" + userId + ", name=" + name + ", ipAdresse=" + ipAdresse + "]";
 	}
 
+	@Override
+	public boolean isAngemeldet() {
+		return false;
+	}
+
 	
 	
 }

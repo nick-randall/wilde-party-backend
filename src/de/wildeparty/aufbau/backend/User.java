@@ -29,6 +29,12 @@ public interface User {
 		 */
 		
 		public String getIpAdresse();
+		
+		/**
+		 * 
+		 * @return ob dieser User instanceof AngemeldeterUser ist
+		 */
+		public boolean isAngemeldet();
 				
 		
 }

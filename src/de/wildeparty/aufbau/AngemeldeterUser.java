@@ -99,5 +99,10 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 		this.passwort = passwort;
 	}
 
+	@Override
+	public void setUserId(long id) {
+		this.userId = id;
+	}
+
 
 }

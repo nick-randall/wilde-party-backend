@@ -79,6 +79,11 @@ public class AnonymerUser implements User {
 		return false;
 	}
 
+	@Override
+	public void setUserId(long id) {
+		this.userId = id;		
+	}
+
 	
 	
 }

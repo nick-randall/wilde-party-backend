@@ -55,7 +55,7 @@ public class UserService {
 	}
 	/**
 	 * 
-	 * @return
+	 * @return den ersten User mit dieser ID;
 	 */
 	public User getUserById(long id) {
 		User user = null;
@@ -66,6 +66,10 @@ public class UserService {
 			}
 		}
 		return user;
+	}
+	
+	public void machenAngemeldetenAusAnonymenUser(AnonymerUser benutzer) {
+		
 	}
 
 }

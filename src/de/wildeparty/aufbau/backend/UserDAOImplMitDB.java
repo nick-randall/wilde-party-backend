@@ -53,22 +53,68 @@ public class UserDAOImplMitDB implements UserDao {
 		return alleUsers;
 	}
 
+	// Diese Methode ist nur für die Objekte, die zum Spiel gehören
+//	public long vergebenNeuerId() {
+//		String sql = "INSERT assigned_ids VALUE(null)";
+//		long neueId = 0;
+//
+//		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
+//				ZugriffAufDB.PASSWORT); Statement verpackung = verbindung.createStatement();)
+//		{
+//			verpackung.execute(sql);
+//		} catch (SQLException ausnahme) {
+//			ausnahme.printStackTrace();
+//		}
+//		sql = "SELECT * FROM assigned_ids ORDER BY ASSIGNED_IDS DESC";
+//		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
+//				ZugriffAufDB.PASSWORT); Statement verpackung = verbindung.createStatement();
+//				ResultSet ergebnis = verpackung.executeQuery(sql);)
+//		{
+//			neueId = ergebnis.getLong(1); 
+//			
+//		} catch (SQLException ausnahme) {
+//			ausnahme.printStackTrace();
+//		}
+//		return neueId;
+//		
+//	}
+
 	@Override
 	public void addUser(User benutzer) {
-		String sql = "INSERT users VALUE (0, ?, ?, ?, ?)";
+		// Die Datenbank benutzt Auto-Increment, also setzten wir den ersten Wert auf
+		// NULL
+		String sql = "INSERT users VALUE (NULL, ?, ?, ?, ?, ?)";
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
 				ZugriffAufDB.PASSWORT); PreparedStatement verpackung = verbindung.prepareStatement(sql);) {
 			verpackung.setString(1, benutzer.getName());
 			verpackung.setString(2, benutzer.getIpAdresse());
-			verpackung.setBoolean(3, benutzer instanceof AnonymerUser);
+			verpackung.setBoolean(3, benutzer.isAngemeldet());
 			String emailAdresse = null;
+			String passwort = null;
 			if (benutzer.isAngemeldet()) {
 				AngemeldeterUser au = (AngemeldeterUser) benutzer;
 				emailAdresse = au.getEmailAdresse();
+				passwort = au.getPasswort();
 			}
 			verpackung.setString(4, emailAdresse);
+			verpackung.setString(5, passwort);
 			verpackung.execute();
 
+		} catch (SQLException ausnahme) {
+			ausnahme.printStackTrace();
+		}
+
+		// Jetzt die von der Datenbank vergebene ID holen und diese dem neuen
+		// User-Objekt übergeben
+		sql = "SELECT * FROM users ORDER BY USER_ID DESC";
+		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
+				ZugriffAufDB.PASSWORT);
+				Statement verpackung = verbindung.createStatement();
+				ResultSet ergebnis = verpackung.executeQuery(sql);) {
+			if (ergebnis.next()) {
+				long neueId = ergebnis.getLong(1);
+				benutzer.setUserId(neueId);
+			}
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
@@ -91,20 +137,36 @@ public class UserDAOImplMitDB implements UserDao {
 
 	@Override
 	public void updateUser(User benutzer) {
-		// TODO Auto-generated method stub
+		long id = benutzer.getUserId();
+		String sql = "UPDATE users SET name = ?, ip_address = ?, is_anonym = ?, email_address = ?, password = ? " + "WHERE user_id = " + id;
+		try(Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER, ZugriffAufDB.PASSWORT);
+				PreparedStatement verpackung = verbindung.prepareStatement(sql)){
+		
+			verpackung.setString(1, benutzer.getName());
+			verpackung.setString(2, benutzer.getIpAdresse());
+			verpackung.setBoolean(3, benutzer.isAngemeldet());
+			verpackung.setString(1, benutzer.getName());
+			verpackung.setString(1, benutzer.getName());
+			verpackung.setString(1, benutzer.getName());
 
+		}catch(SQLException ausnahme) {
+			ausnahme.printStackTrace();
+		}
 	}
 
-	// Holt nur den ersten User, der die angegebene ID hat. Ignoriert also mögliche Duplikate,
-	// die sollte es sowieso nicht geben
+	/*
+	 * Holt aus der Datenbank nur den ersten User, der die angegebene ID hat.
+	 * Ignoriert also mögliche Duplikate, die sollte es sowieso nicht geben
+	 **/
 	@Override
 	public User getUserById(long id) {
 		String sql = "SELECT * FROM users WHERE user_id = " + id;
 		User benutzer = null;
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
-				ZugriffAufDB.PASSWORT); Statement verpackung = verbindung.createStatement();
+				ZugriffAufDB.PASSWORT);
+				Statement verpackung = verbindung.createStatement();
 				ResultSet ergebnis = verpackung.executeQuery(sql);) {
-			if(ergebnis.next()) {
+			if (ergebnis.next()) {
 				long userId = ergebnis.getLong(1);
 				String name = ergebnis.getString(2);
 				String ipAdresse = ergebnis.getString(3);
@@ -115,9 +177,9 @@ public class UserDAOImplMitDB implements UserDao {
 					String passwort = ergebnis.getString(6);
 					benutzer = new AngemeldeterUser(benutzer, emailAdresse, passwort);
 				}
-			
+
 			}
-			
+
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}

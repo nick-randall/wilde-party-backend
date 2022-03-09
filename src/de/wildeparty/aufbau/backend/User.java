@@ -35,6 +35,11 @@ public interface User {
 		 * @return ob dieser User instanceof AngemeldeterUser ist
 		 */
 		public boolean isAngemeldet();
+		
+		/**
+		 * @param id 
+		 */
+		public void setUserId(long id);
 				
 		
 }

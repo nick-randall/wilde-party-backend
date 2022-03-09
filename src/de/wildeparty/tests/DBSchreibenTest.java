@@ -15,13 +15,13 @@ public class DBSchreibenTest {
 		UserDAOImplMitDB quelle = new UserDAOImplMitDB();
 		UserService userKnecht = new UserService(quelle);
 		
-//		quelle.addUser(userEins);
+		quelle.addUser(userEins);
 //		quelle.deleteUser(userEins);
 		
 		
-//		System.out.println(userKnecht.getAlleUsers());
-		System.out.println(userKnecht.getUserById(0));
-		System.out.println(userKnecht.isIpAdresseVorhanden("127.0.0.1"));
+		System.out.println(userKnecht.getAlleUsers());
+//		System.out.println(userKnecht.getUserById(0));
+//		System.out.println(userKnecht.isIpAdresseVorhanden("127.0.0.1"));
 
 		
 	}

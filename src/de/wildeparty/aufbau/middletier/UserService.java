@@ -68,6 +68,10 @@ public class UserService {
 		return user;
 	}
 	
+	public void updateUser(User benutzer) {
+		datenquelle.updateUser(benutzer);
+	}
+	
 	public void machenAngemeldetenAusAnonymenUser(AnonymerUser benutzer) {
 		
 	}

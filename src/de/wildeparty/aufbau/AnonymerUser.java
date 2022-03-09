@@ -1,5 +1,7 @@
 package de.wildeparty.aufbau;
 
+import java.util.Objects;
+
 import de.wildeparty.aufbau.backend.User;
 
 /**
@@ -84,6 +86,24 @@ public class AnonymerUser implements User {
 		this.userId = id;		
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(ipAdresse, userId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AnonymerUser other = (AnonymerUser) obj;
+		return Objects.equals(ipAdresse, other.ipAdresse) && userId == other.userId;
+	}
+
+	
 	
 	
 }

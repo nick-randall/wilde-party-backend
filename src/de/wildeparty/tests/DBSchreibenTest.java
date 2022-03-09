@@ -15,9 +15,11 @@ public class DBSchreibenTest {
 		UserDAOImplMitDB quelle = new UserDAOImplMitDB();
 		UserService userKnecht = new UserService(quelle);
 		
-		quelle.addUser(userEins);
+		//quelle.addUser(userEins);
 //		quelle.deleteUser(userEins);
-		
+		User userZwei = userKnecht.getUserById(15);
+		userZwei.setName("Horst mcFarrow");
+		userKnecht.updateUser(userZwei);
 		
 		System.out.println(userKnecht.getAlleUsers());
 //		System.out.println(userKnecht.getUserById(0));

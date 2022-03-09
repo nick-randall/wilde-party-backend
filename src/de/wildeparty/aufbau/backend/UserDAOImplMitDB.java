@@ -36,8 +36,8 @@ public class UserDAOImplMitDB implements UserDao {
 				String name = ergebnis.getString(2);
 				String ipAdresse = ergebnis.getString(3);
 				benutzer = new AnonymerUser(userId, name, ipAdresse);
-				boolean isAnonym = ergebnis.getBoolean(4);
-				if (!isAnonym) {
+				boolean isAngemeldet = ergebnis.getBoolean(4);
+				if (isAngemeldet) {
 					String emailAdresse = ergebnis.getString(5);
 					String passwort = ergebnis.getString(6);
 					benutzer = new AngemeldeterUser(benutzer, emailAdresse, passwort);
@@ -134,29 +134,37 @@ public class UserDAOImplMitDB implements UserDao {
 		alleUsers.remove(benutzer);
 
 	}
+	/**
+	 * Hier einen Benutzer übergeben mit 
+	 */
 
 	@Override
 	public void updateUser(User benutzer) {
 		long id = benutzer.getUserId();
-		String sql = "UPDATE users SET name = ?, ip_address = ?, is_anonym = ?, email_address = ?, password = ? " + "WHERE user_id = " + id;
-		try(Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER, ZugriffAufDB.PASSWORT);
-				PreparedStatement verpackung = verbindung.prepareStatement(sql)){
-		
+		String sql = "UPDATE users SET name = ?, ip_address = ?, is_anonym = ?, email_address = ?, password = ? "
+				+ "WHERE user_id = " + id;
+		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
+				ZugriffAufDB.PASSWORT); PreparedStatement verpackung = verbindung.prepareStatement(sql)) {
+
 			verpackung.setString(1, benutzer.getName());
 			verpackung.setString(2, benutzer.getIpAdresse());
 			verpackung.setBoolean(3, benutzer.isAngemeldet());
-			verpackung.setString(1, benutzer.getName());
-			verpackung.setString(1, benutzer.getName());
-			verpackung.setString(1, benutzer.getName());
-
-		}catch(SQLException ausnahme) {
+			if (benutzer.isAngemeldet()) {
+				AngemeldeterUser au = (AngemeldeterUser) benutzer;
+				verpackung.setString(4, au.getEmailAdresse());
+				verpackung.setString(1, au.getPasswort());
+			}
+		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
+		alleUsers.remove(benutzer);
+		alleUsers.add(benutzer);
 	}
 
 	/*
-	 * Holt aus der Datenbank nur den ersten User, der die angegebene ID hat.
-	 * Ignoriert also mögliche Duplikate, die sollte es sowieso nicht geben
+	 * Holt aus der Datenbank nur den ersten User, der die angegebene ID hat. Würde
+	 * also mögliche Duplikate ignorieren, die Datenbank sollte dies aber verbieten
+	 * durch Auto-Increment
 	 **/
 	@Override
 	public User getUserById(long id) {

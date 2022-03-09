@@ -1,5 +1,7 @@
 package de.wildeparty.aufbau;
 
+import java.util.Objects;
+
 import de.wildeparty.aufbau.backend.User;
 
 public abstract class AnonymerUserDecorator implements User {
@@ -63,5 +65,24 @@ public abstract class AnonymerUserDecorator implements User {
 	 */
 	
 	public abstract String getIpAdresse();
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(userId);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AnonymerUserDecorator other = (AnonymerUserDecorator) obj;
+		return userId == other.userId;
+	}
 	
 }

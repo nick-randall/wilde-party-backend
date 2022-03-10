@@ -1,5 +1,6 @@
 package de.wildeparty.aufbau;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import de.wildeparty.aufbau.backend.User;
@@ -26,7 +27,7 @@ public abstract class AnonymerUserDecorator implements User {
 
 	/**
 	 * 
-	 * @return den selbstgewählten Username;
+	 * @return den selbstgewählten Benutzername;
 	 */
 	@Override
 	public String getName() {
@@ -57,22 +58,34 @@ public abstract class AnonymerUserDecorator implements User {
 	public String getIpAdresse() {
 		return user.getIpAdresse();
 	}
-
+	
 	@Override
-	public int hashCode() {
-		return Objects.hash(user.getUserId());
+	public void setUserId(long id) {
+		this.user.setUserId(id);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AnonymerUserDecorator other = (AnonymerUserDecorator) obj;
-		return user.getUserId() == other.getUserId();
+	public String getSessionId() {
+		return this.user.getSessionId();
 	}
+
+	@Override
+	public void setSessionId(String id) {
+		this.user.setSessionId(id);
+	}
+
+
+	@Override
+	public LocalDateTime getSessionZuletztAktualisiert() {
+		return user.getSessionZuletztAktualisiert();
+	}
+
+
+	@Override
+	public void setSessionZuletztAktualisiert(LocalDateTime zeit) {
+		user.setSessionZuletztAktualisiert(zeit);
+	}
+	
+
 
 }

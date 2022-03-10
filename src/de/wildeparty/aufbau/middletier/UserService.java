@@ -37,7 +37,7 @@ public class UserService {
 	 * @return den neu angelegten Benutzer
 	 */
 	
-	public void anlegenNeuenAnonymenUser(AnonymerUser benutzer) {
+	public void anlegenNeuenUser(AnonymerUser benutzer) {
 		datenquelle.addUser(benutzer);
 	}
 	
@@ -72,6 +72,7 @@ public class UserService {
 				break;
 			}
 		}
+		
 		return user;
 	}
 	
@@ -80,7 +81,7 @@ public class UserService {
 	}
 	/**
 	 * 
-	 * @return den neuesten User. 
+	 * @return den neuesten User (also den zuletzt in der DB angelegten). 
 	 */
 	
 	public User holenNeuenUser() {
@@ -88,9 +89,16 @@ public class UserService {
 		return neuerUser; 
 	}
 	
-	public void machenAngemeldetenAusAnonymenUser(AnonymerUser benutzer, String emailAdresse, String passwort) {
-		AngemeldeterUser au = new AngemeldeterUser(benutzer, emailAdresse, passwort);
-		datenquelle.updateUser(au);
+	/**
+	 * 
+	 * @param benutzer
+	 * @param emailAdresse
+	 * @param passwort
+	 */
+	public void anmeldenUser(AnonymerUser benutzer, String emailAdresse, String passwort) {
+		AngemeldeterUser angemeldeterBenutzer = new AngemeldeterUser(benutzer, emailAdresse, passwort);
+		
+		datenquelle.updateUser(angemeldeterBenutzer);
 	}
 
 }

@@ -1,5 +1,7 @@
 package de.wildeparty.aufbau;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +25,7 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 
 	public AngemeldeterUser(User user, String emailAdresse, String passwort) {
 		super(user);
+		System.out.println("Neuer user: " + user.getSessionId());
 	    Pattern VALID_EMAIL = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 		Pattern VALID_PASSWORT = Pattern.compile("{8,20}", Pattern.CASE_INSENSITIVE);
 
@@ -44,17 +47,17 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	}
 	
 
-	/**
-	 * erstellt ein neuer AngemeldeterUser ohne zuerst ein anonymerUser erstellen zu müssen
-	 * @param name
-	 * @param ipAdresse
-	 * @param emailAdresse
-	 */
-	public AngemeldeterUser(long userId, String name, String ipAdresse, String emailAdresse, String passwort) {
-		super(new AnonymerUser(userId, name, ipAdresse));
-		this.emailAdresse = emailAdresse;
-		this.setPasswort(passwort);
-	}
+//	/**
+//	 * erstellt ein neuer AngemeldeterUser ohne zuerst ein anonymerUser erstellen zu müssen
+//	 * @param name
+//	 * @param ipAdresse
+//	 * @param emailAdresse
+//	 */
+//	public AngemeldeterUser(long userId, String name, String ipAdresse, String emailAdresse, String passwort) {
+//		super(new AnonymerUser(userId, name, ipAdresse));
+//		this.emailAdresse = emailAdresse;
+//		this.setPasswort(passwort);
+//	}
 
 
 	public String getEmailAdresse() {
@@ -105,15 +108,31 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	@Override
 	public String toString() {
 		return "AngemeldeterUser [emailAdresse=" + emailAdresse + ", passwort=" + passwort + ", userId=" + getUserId()
-				+ ", name=" + getName() + ", ipAdresse=" + getIpAdresse() + "]";
+				+ ", name=" + getName() + ", ipAdresse=" + getIpAdresse() + ", sessionId=" + getSessionId() + ", sessionZuletztAktualisiert=" + getSessionZuletztAktualisiert() + "]";
 	}
-
+	
 
 	@Override
-	public void setUserId(long id) {
-		// TODO Auto-generated method stub
-		
+	public int hashCode() {
+		return Objects.hash(user.getUserId());
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (hashCode() == obj.hashCode())
+			return true;
+		if (getClass() != obj.getClass())
+			return false;
+		AngemeldeterUser other = (AngemeldeterUser) obj;
+		return user.getUserId() == other.getUserId();
+	}
+	
+	
+	
 
 
 }

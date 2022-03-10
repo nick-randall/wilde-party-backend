@@ -6,15 +6,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.wildeparty.aufbau.AngemeldeterUser;
 import de.wildeparty.aufbau.AnonymerUser;
+import de.wildeparty.aufbau.middletier.RandomString;
 
 public class UserDAOImplMitDB implements UserDao {
 
-	private List<User> alleUsers;
+	private List<User> alleBenutzer;
 
 	public UserDAOImplMitDB() {
 		getAlleUsers();
@@ -34,22 +36,27 @@ public class UserDAOImplMitDB implements UserDao {
 				long userId = ergebnis.getLong(1);
 				String name = ergebnis.getString(2);
 				String ipAdresse = ergebnis.getString(3);
-				User benutzer = new AnonymerUser(userId, name, ipAdresse);
+				String sessionId = ergebnis.getString(7);
+				LocalDateTime sessionZuletztAktualisiert = ergebnis.getTimestamp(8).toLocalDateTime();
+				User benutzer = new AnonymerUser(userId, name, ipAdresse, sessionId, sessionZuletztAktualisiert);
+
 				boolean isAngemeldet = ergebnis.getBoolean(4);
 				if (isAngemeldet) {
 					String emailAdresse = ergebnis.getString(5);
 					String passwort = ergebnis.getString(6);
 					benutzer = new AngemeldeterUser((AnonymerUser) benutzer, emailAdresse, passwort);
+
 				}
+				System.out.println(benutzer.getSessionId());
 				alleUsersTemp.add(benutzer);
 			}
 
 		} catch (SQLException ausnahme) {
-			// TODO better error handling
 			ausnahme.printStackTrace();
 		}
-		alleUsers = alleUsersTemp;
-		return alleUsers;
+		alleBenutzer = alleUsersTemp;
+		
+		return alleBenutzer;
 	}
 
 	// Diese Methode ist nur für die Objekte, die zum Spiel gehören
@@ -78,33 +85,35 @@ public class UserDAOImplMitDB implements UserDao {
 //		
 //	}
 
+	/**
+	 * Legt einen neuen AnonymenUser an, also einen User ohne Login-Daten
+	 */
+
 	@Override
 	public void addUser(User benutzer) {
-		// Die Datenbank benutzt Auto-Increment, also setzten wir den ersten Wert auf
-		// NULL
-		String sql = "INSERT users VALUE (NULL, ?, ?, ?, NULL, NULL)";
+		// Die Datenbank benutzt Auto-Increment, also setzten wir den UserId auf
+		// NULL. Ein anonymer User braucht auch keine email-Adresse und kein Passwort
+		// (Spalten 5 + 6)
+		// Auch die session_timeout (Spalte 8) wird von der Datenbank mit Timestamp
+		// Automatisch gesetzt
+		
+
+		String sql = "INSERT users VALUE (NULL, ?, ?, ?, NULL, NULL, ?, NULL)";
+		String sessionId = new RandomString().getInhalt();
+		
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
 				ZugriffAufDB.PASSWORT); PreparedStatement verpackung = verbindung.prepareStatement(sql);) {
 			verpackung.setString(1, benutzer.getName());
 			verpackung.setString(2, benutzer.getIpAdresse());
 			verpackung.setBoolean(3, false);
-//			verpackung.setBoolean(3, benutzer.isAngemeldet());
-//			String emailAdresse = null;
-//			String passwort = null;
-//			if (benutzer.isAngemeldet()) {
-//				AngemeldeterUser angemeldeterUser = (AngemeldeterUser) benutzer;
-//				emailAdresse = angemeldeterUser.getEmailAdresse();
-//				passwort = angemeldeterUser.getPasswort();
-//			}
-//			verpackung.setString(4, emailAdresse);
-//			verpackung.setString(5, passwort);
+			verpackung.setString(4, sessionId);
 			verpackung.execute();
 
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
 
-		// Jetzt die von der Datenbank vergebene ID holen und diese dem neuen
+		// Jetzt die von der Datenbank vergebene ID und TimeStamp holen und diese dem neuen
 		// User-Objekt übergeben
 		sql = "SELECT * FROM users ORDER BY USER_ID DESC";
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
@@ -114,11 +123,16 @@ public class UserDAOImplMitDB implements UserDao {
 			if (ergebnis.next()) {
 				long neueId = ergebnis.getLong(1);
 				benutzer.setUserId(neueId);
+				LocalDateTime sessionZuletzAktualisert = ergebnis.getTimestamp(8).toLocalDateTime();
+				benutzer.setSessionZuletztAktualisiert(sessionZuletzAktualisert);
+				
 			}
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
-		alleUsers.add(benutzer);
+		benutzer.setSessionId(sessionId);
+		benutzer.getSessionZuletztAktualisiert();
+		alleBenutzer.add(benutzer);
 
 	}
 
@@ -131,18 +145,20 @@ public class UserDAOImplMitDB implements UserDao {
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
-		alleUsers.remove(benutzer);
+		alleBenutzer.remove(benutzer);
 
 	}
+
 	/**
 	 * Hier einen Benutzer übergeben mit neuen Parametern...aber die gleiche User-Id
 	 */
 
 	@Override
 	public void updateUser(User benutzer) {
-		System.out.println("Updating user " + benutzer + " isAngemeldet: " + benutzer.isAngemeldet());
+		System.out.println("lsdakflsd");
+		System.out.println(benutzer.getSessionId());
 		long id = benutzer.getUserId();
-		String sql = "UPDATE users SET name = ?, ip_address = ?, is_anonym = ?, email_address = ?, password = ? "
+		String sql = "UPDATE users SET name = ?, ip_address = ?, is_registered = ?, email_address = ?, password = ?, session_id = ? "
 				+ "WHERE user_id = " + id;
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
 				ZugriffAufDB.PASSWORT); PreparedStatement verpackung = verbindung.prepareStatement(sql)) {
@@ -150,17 +166,28 @@ public class UserDAOImplMitDB implements UserDao {
 			verpackung.setString(1, benutzer.getName());
 			verpackung.setString(2, benutzer.getIpAdresse());
 			verpackung.setBoolean(3, benutzer.isAngemeldet());
+			verpackung.setString(6, benutzer.getSessionId());
+
+
 			if (benutzer.isAngemeldet()) {
 				AngemeldeterUser au = (AngemeldeterUser) benutzer;
 				verpackung.setString(4, au.getEmailAdresse());
-				verpackung.setString(1, au.getPasswort());
+				verpackung.setString(5, au.getPasswort());
 			}
+			verpackung.execute();
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
-		
-		alleUsers.remove(benutzer);
-		alleUsers.add(benutzer);
+		User alterBenutzer = null;
+		if (benutzer.isAngemeldet()) {
+			alterBenutzer = (AngemeldeterUser) benutzer;
+		} else {
+			alterBenutzer = (AnonymerUser) benutzer;
+		}
+		benutzer.setSessionZuletztAktualisiert(LocalDateTime.now());
+		alleBenutzer.remove(alterBenutzer);
+
+		alleBenutzer.add(benutzer);
 	}
 
 	/*
@@ -180,16 +207,17 @@ public class UserDAOImplMitDB implements UserDao {
 				long userId = ergebnis.getLong(1);
 				String name = ergebnis.getString(2);
 				String ipAdresse = ergebnis.getString(3);
-				benutzer = new AnonymerUser(userId, name, ipAdresse);
-				boolean isAnonym = ergebnis.getBoolean(4);
-				if (!isAnonym) {
+				String sessionId = ergebnis.getString(7);
+				LocalDateTime sessionZuletztAktualisiert = ergebnis.getTimestamp(8).toLocalDateTime();
+				benutzer = new AnonymerUser(userId, name, ipAdresse, sessionId, sessionZuletztAktualisiert);
+				boolean isAngemeldet = ergebnis.getBoolean(4);
+				if (isAngemeldet) {
 					String emailAdresse = ergebnis.getString(5);
 					String passwort = ergebnis.getString(6);
 					benutzer = new AngemeldeterUser((AnonymerUser) benutzer, emailAdresse, passwort);
 				}
 
 			}
-
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}

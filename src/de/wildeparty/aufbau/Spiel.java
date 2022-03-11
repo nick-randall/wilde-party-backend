@@ -45,7 +45,7 @@ public class Spiel {
 	 * zugewiesen wurden.
 	 */
 
-	private final Snapshot snapshot = null;
+	private Snapshot snapshot;
 
 	@Override
 	public String toString() {

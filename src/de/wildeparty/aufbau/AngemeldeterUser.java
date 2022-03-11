@@ -25,7 +25,6 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 
 	public AngemeldeterUser(User user, String emailAdresse, String passwort) {
 		super(user);
-		System.out.println("Neuer user: " + user.getSessionId());
 	    Pattern VALID_EMAIL = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 		Pattern VALID_PASSWORT = Pattern.compile("{8,20}", Pattern.CASE_INSENSITIVE);
 

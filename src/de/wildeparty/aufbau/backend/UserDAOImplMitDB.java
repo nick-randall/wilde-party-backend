@@ -47,7 +47,6 @@ public class UserDAOImplMitDB implements UserDao {
 					benutzer = new AngemeldeterUser((AnonymerUser) benutzer, emailAdresse, passwort);
 
 				}
-				System.out.println(benutzer.getSessionId());
 				alleUsersTemp.add(benutzer);
 			}
 
@@ -155,8 +154,6 @@ public class UserDAOImplMitDB implements UserDao {
 
 	@Override
 	public void updateUser(User benutzer) {
-		System.out.println("lsdakflsd");
-		System.out.println(benutzer.getSessionId());
 		long id = benutzer.getUserId();
 		String sql = "UPDATE users SET name = ?, ip_address = ?, is_registered = ?, email_address = ?, password = ?, session_id = ? "
 				+ "WHERE user_id = " + id;

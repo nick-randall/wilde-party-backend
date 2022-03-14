@@ -5,11 +5,15 @@ import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
 
+import de.wildeparty.aufbau.backend.UserDao;
+import de.wildeparty.aufbau.middletier.UserService;
+
 public class DerServer {
 
 	private static DerServer server;
 
-	private DerServer(String adresse, int port) {
+	private DerServer(String adresse, int port, UserService userKnecht) {
+		
 		try {
 			HttpServer server = HttpServer.create(new InetSocketAddress(adresse, port), 0);
 
@@ -25,11 +29,11 @@ public class DerServer {
 
 	}
 
-	public static DerServer getInstance(String adresse, int port) {
+	public static DerServer getInstance(String adresse, int port, UserService userKnecht) {
 		if (server != null) {
 			return server;
 		}
-		DerServer server = new DerServer(adresse, port);
+		DerServer server = new DerServer(adresse, port, userKnecht);
 		return server;
 
 	}

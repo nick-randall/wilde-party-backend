@@ -14,8 +14,8 @@ public class DBSchreibenTest {
 		UserDAOImplMitDB quelle = new UserDAOImplMitDB();
 		UserService userKnecht = new UserService(quelle);
 
-		AnonymerUser userEins = new AnonymerUser("Charlie Chatwick", "127.0.0.1");
-		AnonymerUser userZwei = new AnonymerUser("Bobby Brown", "127.4.0.1");
+		AnonymerUser userEins = new AnonymerUser("Charlie Chatwick");
+		AnonymerUser userZwei = new AnonymerUser("Bobby Brown");
 
 		userKnecht.anlegenNeuenUser(userEins);
 		AnonymerUser userEinsVonDB = (AnonymerUser) userKnecht.holenNeuenUser();
@@ -23,8 +23,8 @@ public class DBSchreibenTest {
 		AnonymerUser userZweiVonDB = (AnonymerUser) userKnecht.holenNeuenUser();
 
 		System.out.println("*****");
-		System.out.println(userEins.getSessionId());
-		System.out.println(userZweiVonDB.getSessionId());
+		System.out.println(userEins.getToken());
+		System.out.println(userZweiVonDB.getToken());
 
 		System.out.println("User 1: " + userEinsVonDB);
 		System.out.println("User 2: " + userZweiVonDB);

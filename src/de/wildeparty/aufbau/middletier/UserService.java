@@ -46,20 +46,20 @@ public class UserService {
 	}
 	
 
-	/**
-	 * 
-	 * @param ipAdresse
-	 * @return ob es bereits einen Benutzer in der Datenquelle gibt, die diese ipAdresse hat.
-	 */
-	public boolean isIpAdresseVorhanden(String ipAdresse) {
-		boolean isVorhanden = false;
-		for (User benutzer : alleUsers) {
-			if (benutzer.getIpAdresse().equals(ipAdresse)) {
-				isVorhanden = true;
-			}
-		}
-		return isVorhanden;
-	}
+//	/**
+//	 * 
+//	 * @param ipAdresse
+//	 * @return ob es bereits einen Benutzer in der Datenquelle gibt, die diese ipAdresse hat.
+//	 */
+//	public boolean isIpAdresseVorhanden(String ipAdresse) {
+//		boolean isVorhanden = false;
+//		for (User benutzer : alleUsers) {
+//			if (benutzer.getIpAdresse().equals(ipAdresse)) {
+//				isVorhanden = true;
+//			}
+//		}
+//		return isVorhanden;
+//	}
 	/**
 	 * 
 	 * @return den ersten User mit dieser ID;

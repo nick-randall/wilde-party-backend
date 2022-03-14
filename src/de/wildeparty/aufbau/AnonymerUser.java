@@ -28,23 +28,16 @@ public class AnonymerUser implements User {
 	private String name;
 
 	/**
-	 * die IP-Adresse dieses Users.
-	 * 
-	 */
-
-	private final String ipAdresse;
-
-	/**
 	 * Ein vom Server erteilter String, der den User identifiziert
 	 */
 
-	private String sessionId;
+	private String token;
 
 	/**
 	 *  
 	 */
 
-	private LocalDateTime sessionZuletztAktualisiert;
+	private LocalDateTime tokenZuletztAktualisiert;
 
 	/**
 	 * Konstruktor für lokale Objekte, die 
@@ -55,10 +48,10 @@ public class AnonymerUser implements User {
 	 * @param ipAdresse
 	 */
 
-	public AnonymerUser(String name, String ipAdresse) {
+	public AnonymerUser(String name) {
 		super();
 		this.name = name;
-		this.ipAdresse = ipAdresse;
+//		this.ipAdresse = ipAdresse;
 	}
 
 	/**
@@ -69,27 +62,27 @@ public class AnonymerUser implements User {
 	 * @param ipAdresse
 	 */
 
-	public AnonymerUser(long userId, String name, String ipAdresse, String sessionId, LocalDateTime sessionZuletztAktualisiert) {
+	public AnonymerUser(long userId, String name, String token, LocalDateTime tokenZuletztAktualisiert) {
 		super();
 		this.userId = userId;
 		this.name = name;
-		this.ipAdresse = ipAdresse;
-		this.sessionId = sessionId;
-		this.sessionZuletztAktualisiert = sessionZuletztAktualisiert;
+//		this.ipAdresse = ipAdresse;
+		this.token = token;
+		this.tokenZuletztAktualisiert = tokenZuletztAktualisiert;
 	}
 
 	/**
 	 * @return the sessionId
 	 */
-	public String getSessionId() {
-		return sessionId;
+	public String getToken() {
+		return token;
 	}
 
 	/**
 	 * @param sessionId the sessionId to set
 	 */
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	@Override
@@ -108,16 +101,16 @@ public class AnonymerUser implements User {
 
 	}
 
-	@Override
-	public String getIpAdresse() {
-		return ipAdresse;
-	}
+//	@Override
+//	public String getIpAdresse() {
+//		return ipAdresse;
+//	}
 
 
 	@Override
 	public String toString() {
-		return "AnonymerUser [userId=" + userId + ", name=" + name + ", ipAdresse=" + ipAdresse + ", sessionId="
-				+ sessionId + ", sessionZuletztAktualisiert=" + sessionZuletztAktualisiert + "]";
+		return "AnonymerUser [userId=" + userId + ", name=" + name + ", token="
+				+ token + ", tokenZuletztAktualisiert=" + tokenZuletztAktualisiert + "]";
 	}
 
 	@Override
@@ -131,13 +124,13 @@ public class AnonymerUser implements User {
 	}
 
 	@Override
-	public LocalDateTime getSessionZuletztAktualisiert() {
-		return sessionZuletztAktualisiert;
+	public LocalDateTime getTokenZuletztAktualisiert() {
+		return tokenZuletztAktualisiert;
 	}
 
 	@Override
-	public void setSessionZuletztAktualisiert(LocalDateTime zeit) {
-		sessionZuletztAktualisiert = zeit;
+	public void setTokenZuletztAktualisiert(LocalDateTime zeit) {
+		tokenZuletztAktualisiert = zeit;
 
 	}
 

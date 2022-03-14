@@ -35,15 +35,14 @@ public class UserDAOImplMitDB implements UserDao {
 			while (ergebnis.next()) {
 				long userId = ergebnis.getLong(1);
 				String name = ergebnis.getString(2);
-				String ipAdresse = ergebnis.getString(3);
-				String sessionId = ergebnis.getString(7);
-				LocalDateTime sessionZuletztAktualisiert = ergebnis.getTimestamp(8).toLocalDateTime();
-				User benutzer = new AnonymerUser(userId, name, ipAdresse, sessionId, sessionZuletztAktualisiert);
+				String token = ergebnis.getString(6);
+				LocalDateTime sessionZuletztAktualisiert = ergebnis.getTimestamp(7).toLocalDateTime();
+				User benutzer = new AnonymerUser(userId, name, token, sessionZuletztAktualisiert);
 
-				boolean isAngemeldet = ergebnis.getBoolean(4);
+				boolean isAngemeldet = ergebnis.getBoolean(3);
 				if (isAngemeldet) {
-					String emailAdresse = ergebnis.getString(5);
-					String passwort = ergebnis.getString(6);
+					String emailAdresse = ergebnis.getString(4);
+					String passwort = ergebnis.getString(5);
 					benutzer = new AngemeldeterUser((AnonymerUser) benutzer, emailAdresse, passwort);
 
 				}
@@ -97,15 +96,14 @@ public class UserDAOImplMitDB implements UserDao {
 		// Automatisch gesetzt
 		
 
-		String sql = "INSERT users VALUE (NULL, ?, ?, ?, NULL, NULL, ?, NULL)";
-		String sessionId = new RandomString().getInhalt();
+		String sql = "INSERT users VALUE (NULL, ?, ?, NULL, NULL, ?, NULL)";
+		String token = new RandomString().getInhalt();
 		
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
 				ZugriffAufDB.PASSWORT); PreparedStatement verpackung = verbindung.prepareStatement(sql);) {
 			verpackung.setString(1, benutzer.getName());
-			verpackung.setString(2, benutzer.getIpAdresse());
-			verpackung.setBoolean(3, false);
-			verpackung.setString(4, sessionId);
+			verpackung.setBoolean(2, false);
+			verpackung.setString(3, token);
 			verpackung.execute();
 
 		} catch (SQLException ausnahme) {
@@ -122,15 +120,15 @@ public class UserDAOImplMitDB implements UserDao {
 			if (ergebnis.next()) {
 				long neueId = ergebnis.getLong(1);
 				benutzer.setUserId(neueId);
-				LocalDateTime sessionZuletzAktualisert = ergebnis.getTimestamp(8).toLocalDateTime();
-				benutzer.setSessionZuletztAktualisiert(sessionZuletzAktualisert);
+				LocalDateTime sessionZuletzAktualisert = ergebnis.getTimestamp(7).toLocalDateTime();
+				benutzer.setTokenZuletztAktualisiert(sessionZuletzAktualisert);
 				
 			}
 		} catch (SQLException ausnahme) {
 			ausnahme.printStackTrace();
 		}
-		benutzer.setSessionId(sessionId);
-		benutzer.getSessionZuletztAktualisiert();
+		benutzer.setToken(token);
+		benutzer.getTokenZuletztAktualisiert();
 		alleBenutzer.add(benutzer);
 
 	}
@@ -155,21 +153,20 @@ public class UserDAOImplMitDB implements UserDao {
 	@Override
 	public void updateUser(User benutzer) {
 		long id = benutzer.getUserId();
-		String sql = "UPDATE users SET name = ?, ip_address = ?, is_registered = ?, email_address = ?, password = ?, session_id = ? "
+		String sql = "UPDATE users SET name = ?, is_registered = ?, email_address = ?, password = ?, token = ? "
 				+ "WHERE user_id = " + id;
 		try (Connection verbindung = DriverManager.getConnection(ZugriffAufDB.URL, ZugriffAufDB.USER,
 				ZugriffAufDB.PASSWORT); PreparedStatement verpackung = verbindung.prepareStatement(sql)) {
 
 			verpackung.setString(1, benutzer.getName());
-			verpackung.setString(2, benutzer.getIpAdresse());
-			verpackung.setBoolean(3, benutzer.isAngemeldet());
-			verpackung.setString(6, benutzer.getSessionId());
+			verpackung.setBoolean(2, benutzer.isAngemeldet());
+			verpackung.setString(5, benutzer.getToken());
 
 
 			if (benutzer.isAngemeldet()) {
 				AngemeldeterUser au = (AngemeldeterUser) benutzer;
-				verpackung.setString(4, au.getEmailAdresse());
-				verpackung.setString(5, au.getPasswort());
+				verpackung.setString(3, au.getEmailAdresse());
+				verpackung.setString(4, au.getPasswort());
 			}
 			verpackung.execute();
 		} catch (SQLException ausnahme) {
@@ -181,7 +178,7 @@ public class UserDAOImplMitDB implements UserDao {
 		} else {
 			alterBenutzer = (AnonymerUser) benutzer;
 		}
-		benutzer.setSessionZuletztAktualisiert(LocalDateTime.now());
+		benutzer.setTokenZuletztAktualisiert(LocalDateTime.now());
 		alleBenutzer.remove(alterBenutzer);
 
 		alleBenutzer.add(benutzer);
@@ -203,14 +200,13 @@ public class UserDAOImplMitDB implements UserDao {
 			if (ergebnis.next()) {
 				long userId = ergebnis.getLong(1);
 				String name = ergebnis.getString(2);
-				String ipAdresse = ergebnis.getString(3);
-				String sessionId = ergebnis.getString(7);
+				String token = ergebnis.getString(6);
 				LocalDateTime sessionZuletztAktualisiert = ergebnis.getTimestamp(8).toLocalDateTime();
-				benutzer = new AnonymerUser(userId, name, ipAdresse, sessionId, sessionZuletztAktualisiert);
-				boolean isAngemeldet = ergebnis.getBoolean(4);
+				benutzer = new AnonymerUser(userId, name, token, sessionZuletztAktualisiert);
+				boolean isAngemeldet = ergebnis.getBoolean(3);
 				if (isAngemeldet) {
-					String emailAdresse = ergebnis.getString(5);
-					String passwort = ergebnis.getString(6);
+					String emailAdresse = ergebnis.getString(4);
+					String passwort = ergebnis.getString(5);
 					benutzer = new AngemeldeterUser((AnonymerUser) benutzer, emailAdresse, passwort);
 				}
 

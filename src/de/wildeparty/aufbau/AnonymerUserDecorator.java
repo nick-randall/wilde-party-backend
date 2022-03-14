@@ -49,41 +49,31 @@ public abstract class AnonymerUserDecorator implements User {
 
 	public abstract void spielStarten(int anzahlSpieler);
 
-	/**
-	 * 
-	 * @return die IP-Adresse dieses Users. Diese ist nur wichtig, solange der User
-	 *         sich keine E-Mail-Adresse angelegt hat.
-	 */
-
-	public String getIpAdresse() {
-		return user.getIpAdresse();
-	}
-	
 	@Override
 	public void setUserId(long id) {
 		this.user.setUserId(id);
 	}
 
 	@Override
-	public String getSessionId() {
-		return this.user.getSessionId();
+	public String getToken() {
+		return this.user.getToken();
 	}
 
 	@Override
-	public void setSessionId(String id) {
-		this.user.setSessionId(id);
-	}
-
-
-	@Override
-	public LocalDateTime getSessionZuletztAktualisiert() {
-		return user.getSessionZuletztAktualisiert();
+	public void setToken(String id) {
+		this.user.setToken(id);
 	}
 
 
 	@Override
-	public void setSessionZuletztAktualisiert(LocalDateTime zeit) {
-		user.setSessionZuletztAktualisiert(zeit);
+	public LocalDateTime getTokenZuletztAktualisiert() {
+		return user.getTokenZuletztAktualisiert();
+	}
+
+
+	@Override
+	public void setTokenZuletztAktualisiert(LocalDateTime zeit) {
+		user.setTokenZuletztAktualisiert(zeit);
 	}
 	
 

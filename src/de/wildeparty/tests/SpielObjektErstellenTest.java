@@ -9,7 +9,7 @@ public class SpielObjektErstellenTest {
 
 	public static void main(String[] args) {
 
-		User userEins = new AnonymerUser("Charlie Chatwick", "127.0.0.1");
+		User userEins = new AnonymerUser("Charlie Chatwick");
 		User[] users = { userEins };
 
 		Spiel game = new Spiel(users, SpielStatus.WARTEN, null);

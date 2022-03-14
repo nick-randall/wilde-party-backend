@@ -12,22 +12,25 @@ public class TimestampUpdateTest {
 
 		UserDAOImplMitDB quelle = new UserDAOImplMitDB();
 		UserService userKnecht = new UserService(quelle);
-		
-		AnonymerUser lokalerBenutzer = new AnonymerUser("Ronny Richards", "127.4.23.2");
+
+		AnonymerUser lokalerBenutzer = new AnonymerUser("Ronny Richards");
 		userKnecht.anlegenNeuenUser(lokalerBenutzer);
 		long neuerUserId = userKnecht.holenNeuenUser().getUserId();
-		
-		AnonymerUser benutzer = (AnonymerUser)userKnecht.getUserById(neuerUserId);
-		System.out.println("Dieser " + benutzer.getClass().getSimpleName() + "User wurde zuletzt aktualisiert:" + benutzer.getSessionZuletztAktualisiert());
+
+		AnonymerUser benutzer = (AnonymerUser) userKnecht.getUserById(neuerUserId);
+		System.out.println("Dieser " + benutzer.getClass().getSimpleName() + "s Token: " + benutzer.getToken()
+				+ " wurde zuletzt aktualisiert:" + benutzer.getTokenZuletztAktualisiert());
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		userKnecht.anmeldenUser(benutzer, "Chrissy@christensen.com", "notapassword");
-		AngemeldeterUser angemeldeterBenutzer = (AngemeldeterUser)userKnecht.getUserById(neuerUserId);
-		System.out.println("Dieser " + angemeldeterBenutzer.getClass().getSimpleName() + "User wurde zuletzt aktualisiert:" + angemeldeterBenutzer.getSessionZuletztAktualisiert());
-		
+		AngemeldeterUser angemeldeterBenutzer = (AngemeldeterUser) userKnecht.getUserById(neuerUserId);
+		System.out
+				.println("Dieser " + angemeldeterBenutzer.getClass().getSimpleName() + "s Token: " + benutzer.getToken()
+						+ "wurde zuletzt aktualisiert:" + angemeldeterBenutzer.getTokenZuletztAktualisiert());
+
 	}
 
 }

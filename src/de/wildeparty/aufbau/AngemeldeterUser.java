@@ -1,6 +1,4 @@
 package de.wildeparty.aufbau;
-
-import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,7 +47,6 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 //	/**
 //	 * erstellt ein neuer AngemeldeterUser ohne zuerst ein anonymerUser erstellen zu müssen
 //	 * @param name
-//	 * @param ipAdresse
 //	 * @param emailAdresse
 //	 */
 //	public AngemeldeterUser(long userId, String name, String ipAdresse, String emailAdresse, String passwort) {
@@ -83,11 +80,11 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	public String getName() {
 		return user.getName();
 	}
-
-	@Override
-	public String getIpAdresse() {
-		return user.getIpAdresse();
-	}
+//
+//	@Override
+//	public String getIpAdresse() {
+//		return user.getIpAdresse();
+//	}
 
 	@Override
 	public boolean isAngemeldet() {
@@ -107,7 +104,7 @@ public class AngemeldeterUser extends AnonymerUserDecorator {
 	@Override
 	public String toString() {
 		return "AngemeldeterUser [emailAdresse=" + emailAdresse + ", passwort=" + passwort + ", userId=" + getUserId()
-				+ ", name=" + getName() + ", ipAdresse=" + getIpAdresse() + ", sessionId=" + getSessionId() + ", sessionZuletztAktualisiert=" + getSessionZuletztAktualisiert() + "]";
+				+ ", name=" + getName() + ", token=" + getToken() + ", tokenZuletztAktualisiert=" + getTokenZuletztAktualisiert() + "]";
 	}
 	
 

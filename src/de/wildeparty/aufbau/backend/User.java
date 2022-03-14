@@ -32,14 +32,6 @@ public interface User {
 		
 		/**
 		 * 
-		 * @return die IP-Adresse dieses Users. Diese ist nur wichtig, solange der User sich keine
-		 * E-Mail-Adresse angelegt hat.
-		 */
-		
-		public String getIpAdresse();
-		
-		/**
-		 * 
 		 * @return ob dieser User instanceof AngemeldeterUser ist
 		 */
 		public boolean isAngemeldet();
@@ -49,21 +41,21 @@ public interface User {
 		 * @param id
 		 */
 		
-		public void setSessionId(String id);
+		public void setToken(String token);
 		
 		/**
 		 * 
 		 * @return die aktuelle SessionId für diesen User
 		 */
 		
-		public String getSessionId();
+		public String getToken();
 		
 		/**
 		 * 
 		 * @return wann die SessionId für diesen User zuletzt aktualisert wurde
 		 */
 		
-		public LocalDateTime getSessionZuletztAktualisiert();
+		public LocalDateTime getTokenZuletztAktualisiert();
 		
 		/**
 		 * Setzt wann die sessionId für diesen User zuletzt aktualisert wurde.
@@ -71,7 +63,7 @@ public interface User {
 		 * @param zeit
 		 */
 		
-		public void setSessionZuletztAktualisiert(LocalDateTime zeit);
+		public void setTokenZuletztAktualisiert(LocalDateTime zeit);
 				
 		
 }

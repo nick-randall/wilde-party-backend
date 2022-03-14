@@ -19,10 +19,6 @@ public class EinfacherServerTest {
 		
 	}
 	/*
-	 * Get rid of ip address for an anonymous user
-	 * ...just use name
-	 * ...and give them a token
-	 * ...change session id to be called token
 	 * 
 	 */
 

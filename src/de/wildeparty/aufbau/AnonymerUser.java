@@ -28,7 +28,7 @@ public class AnonymerUser implements User {
 	private String name;
 
 	/**
-	 * Ein vom Server erteilter String, der den User identifiziert
+	 * Ein vom Server erteilter String, der den User authorisiert
 	 */
 
 	private String token;

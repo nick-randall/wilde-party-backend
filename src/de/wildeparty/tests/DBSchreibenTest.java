@@ -18,9 +18,9 @@ public class DBSchreibenTest {
 		AnonymerUser userZwei = new AnonymerUser("Bobby Brown");
 
 		userKnecht.anlegenNeuenUser(userEins);
-		AnonymerUser userEinsVonDB = (AnonymerUser) userKnecht.holenNeuenUser();
+		AnonymerUser userEinsVonDB = (AnonymerUser) userKnecht.getNeuenUser();
 		userKnecht.anlegenNeuenUser(userZwei);
-		AnonymerUser userZweiVonDB = (AnonymerUser) userKnecht.holenNeuenUser();
+		AnonymerUser userZweiVonDB = (AnonymerUser) userKnecht.getNeuenUser();
 
 		System.out.println("*****");
 		System.out.println(userEins.getToken());

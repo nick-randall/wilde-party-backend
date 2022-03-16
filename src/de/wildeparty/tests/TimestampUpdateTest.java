@@ -6,6 +6,15 @@ import de.wildeparty.aufbau.backend.User;
 import de.wildeparty.aufbau.backend.UserDAOImplMitDB;
 import de.wildeparty.aufbau.middletier.UserService;
 
+/**
+ * Demonstriert, dass ein Token von einem Benutzer
+ * aktualisiert wird, wenn ein Attribut vom Benutzer aktualisiert wird.
+ * Hier: ein AnonymerUser wird zum AngemeldetenUser. Die UserId
+ * bleibt gleich, während neben den aktualisierten Attributen 
+ * auch das Attribut tokenZuletzAktualisiert einen neuen Wert bekommt.
+ * @author nick
+ *
+ */
 public class TimestampUpdateTest {
 
 	public static void main(String[] args) {
@@ -15,7 +24,7 @@ public class TimestampUpdateTest {
 
 		AnonymerUser lokalerBenutzer = new AnonymerUser("Ronny Richards");
 		userKnecht.anlegenNeuenUser(lokalerBenutzer);
-		long neuerUserId = userKnecht.holenNeuenUser().getUserId();
+		long neuerUserId = userKnecht.getNeuenUser().getUserId();
 
 		AnonymerUser benutzer = (AnonymerUser) userKnecht.getUserById(neuerUserId);
 		System.out.println("Dieser " + benutzer.getClass().getSimpleName() + "s Token: " + benutzer.getToken()

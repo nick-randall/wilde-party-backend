@@ -2,6 +2,8 @@ package de.wildeparty.aufbau.middletier;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import de.wildeparty.aufbau.AngemeldeterUser;
 import de.wildeparty.aufbau.AnonymerUser;
@@ -89,7 +91,15 @@ public class UserService {
 
 		return user;
 	}
-
+	
+	public User getUser(Predicate<User> kriterium) throws ZuVieleException{
+		List<User> zutreffend = alleUsers.stream().filter(kriterium).collect(Collectors.toList());
+		if(zutreffend.size() == 0) return null;
+		if(zutreffend.size() > 1) throw new ZuVieleException("mehr als Eins");
+		return zutreffend.get(0);
+	}
+	
+	
 	public void updateUser(User benutzer) {
 		datenquelle.updateUser(benutzer);
 	}
@@ -99,7 +109,7 @@ public class UserService {
 	 * @return den neuesten User (also den zuletzt in der DB angelegten).
 	 */
 
-	public User holenNeuenUser() {
+	public User getNeuenUser() {
 		User neuerUser = alleUsers.get(alleUsers.size() - 1);
 		return neuerUser;
 	}
